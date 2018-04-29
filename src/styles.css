@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+/* Alternativen: https://material.angular.io/guide/theming */
+
+/* .mat-toolbar {
+    min-height: 65px !important;
+  } */
+
+  .mat-expansion-indicator::after {
+     color: #C62828 !important   /* mat-red 800 */
+  }
+
+  .mat-panel-title::after {
+    font-size:smaller !important
+  }

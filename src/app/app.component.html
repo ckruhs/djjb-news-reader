@@ -1,0 +1,24 @@
+<mat-toolbar color="primary">
+  <span>{{title}}</span>
+  <span class="fill-remaining-space"></span>
+  <span><i style="cursor:pointer" class="material-icons" (click)="refreshFeed()">refresh</i></span>
+</mat-toolbar>
+
+<ck-spinner *ngIf="!feeds.length"></ck-spinner>
+
+<mat-accordion>
+
+  <mat-expansion-panel *ngFor="let feed of feeds">
+    <mat-expansion-panel-header>
+      <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
+    </mat-expansion-panel-header>
+    <img (click)="openLinkInBrowser(feed)" width="100%" src="{{feed | thumbnail}}" alt="..."><br>
+    {{feed.description | slice:0:1000}}...
+    
+    <mat-action-row>
+        <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
+    </mat-action-row>
+    
+  </mat-expansion-panel>
+  
+</mat-accordion>
