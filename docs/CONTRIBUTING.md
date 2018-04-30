@@ -1,7 +1,7 @@
 Contributing to DJJB News Reader
 =========================================
 
-:+1::tada: First off, thanks for taking the time to contribute! :tada::+1
+:+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
 
 ### **Did you find a bug?**
 
@@ -24,7 +24,7 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 
 ### Any contributions you make will be under the MIT Software License
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. 
+When you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. 
 
 ### **Language**
 You can write issues and pull requests in **English** or **German** language.
