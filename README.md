@@ -1,3 +1,8 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+<a href="https://twitter.com/ckruhs">
+        <img src="https://img.shields.io/twitter/follow/ckruhs.svg?style=social&logo=twitter"
+            alt="follow on Twitter"></a>
+
 # DJJB News Reader
 
 This is a Web App to display the [News Feed](https://www.DJJB.de/index.rss) of the German Jiu Jitsu Federation / [Deutscher Jiu Jitsu Bund](https://www.DJJB.de) (DJJB) on mobile devices.
@@ -53,15 +58,15 @@ ng serve
 
 Navigate to [http://localhost:4200/](http://localhost:4200/). The app will automatically reload if you change any of the source files.
 
-## Credits
-- https://github.com/becompany/angular2-rss-reader-tutorial
-- https://github.com/cubiq/add-to-homescreen
+## Acknowledgments
+The [BeCompany news reader tutorial](https://github.com/becompany/angular2-rss-reader-tutorial) was a good starting point for the project and some code parts were taken over.
+
 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details.
 
-djjb-news-reader uses several third-party libraries. More information can be found in [THIRD-PARTY-NOTICES.txt](docs/THIRD-PARTY-NOTICES.txt).
+DJJB News Reader uses several third-party libraries. More information can be found in [THIRD-PARTY-NOTICES.txt](docs/THIRD-PARTY-NOTICES.txt).
 
 ## Contributing
 See the [Guidelines for Contributing](docs/CONTRIBUTING.md)
