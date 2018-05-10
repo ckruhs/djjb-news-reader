@@ -5,7 +5,7 @@ export class AppPage {
     return browser.get('/');
   }
 
-  getParagraphText() {
-    return element(by.css('ck-root h1')).getText();
+  title() {
+    return browser.getTitle();
   }
 }
