@@ -16,7 +16,7 @@ Since the App displays a german speaking RSS Feed, the user interface is display
 
 
 ## Getting Started
-The project was created with [Visual Studio Code](https://code.visualstudio.com/) and the [Angular CLI](https://github.com/angular/angular-cli) Version 1.7.4.
+The project was created with [Visual Studio Code](https://code.visualstudio.com/) and the [Angular CLI](https://github.com/angular/angular-cli) Version 6.0.
 
 These instructions will get you a copy of the project up and running on your local machine for development purposes.
 
@@ -26,7 +26,7 @@ You need to set up your development environment first. See [Angular QuickStart G
 Install [Node.js® and npm](https://nodejs.org/en/download/) if they are not already on your machine.
 
 ```
-Verify that you are running at least node 6.9.x and npm 3.x.x by running node -v and npm -v in a terminal/console window.
+Verify that you are running at least Node.js version 8.x or greater and npm version 5.x or greater by running node -v and npm -v in a terminal/console window. Older versions produce errors, but newer versions are fine.
 ```
 
 Then install the Angular CLI globally:
