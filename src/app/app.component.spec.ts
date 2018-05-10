@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ThumbnailPipe } from './pipes/thumbnail.pipe';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule, MatExpansionModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +16,7 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         BrowserModule,
-        HttpModule,
+        HttpClientModule,
         MatToolbarModule,
         MatExpansionModule,
         NoopAnimationsModule
