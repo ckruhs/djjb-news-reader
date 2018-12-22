@@ -1,10 +1,9 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/delay';
-
+import { map } from 'rxjs/operators';
 
 import * as xml2js from 'xml2js';
 
@@ -16,8 +15,8 @@ export class FeedService {
   constructor(private http: HttpClient) { }
 
   getFeedContent(url: string): Observable<Feed> {
-    return this.http.get(url, {responseType: 'text'})
-      .map(this.extractFeeds);
+    return this.http.get(url, {responseType: 'text'}).pipe(
+      map(this.extractFeeds));
   }
 
 /**
