@@ -1,8 +1,9 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewEncapsulation } from '@angular/core';
 
+import { delay } from 'rxjs/internal/operators';
+
 import { FeedService } from './services/feed.service';
 import { FeedEntry } from './api/feed-entry';
-import { Feed, Rss, FeedInfo } from './api/feed';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   refreshFeed() {
     this.feeds.length = 0;
 
-    this.feedService.getFeedContent(this.feedLocation).delay(500)
+    this.feedService.getFeedContent(this.feedLocation).pipe(delay(500))
         .subscribe(
             feed => {
               // console.log('feed: ' , feed);
@@ -47,7 +48,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             error => console.log(error));
   }
 
-  openLinkInBrowser(feed) {
+  openLinkInBrowser(feed: { link: string; }) {
     window.open(feed.link);
   }
 }
