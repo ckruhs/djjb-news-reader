@@ -7,9 +7,7 @@
       "files": [
         "./favicon.ico",
         "./index.html",
-        "./manifest.json"
-      ],
-      "versionedFiles": [
+        "./manifest.json",
         "./*.bundle.css",
         "./*.bundle.js",
         "./*.chunk.js"
