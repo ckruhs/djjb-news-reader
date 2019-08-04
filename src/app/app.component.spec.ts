@@ -6,7 +6,7 @@ import { ThumbnailPipe } from './pipes/thumbnail.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule, MatExpansionModule } from '@angular/material';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeedService } from './services/feed.service';
 
 describe('AppComponent', () => {
@@ -19,7 +19,7 @@ describe('AppComponent', () => {
         HttpClientModule,
         MatToolbarModule,
         MatExpansionModule,
-        NoopAnimationsModule
+        BrowserAnimationsModule
       ],
       declarations: [
         AppComponent,
