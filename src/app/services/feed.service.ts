@@ -29,8 +29,8 @@ export class FeedService {
  */
 private extractFeeds(response: any): Feed {
     const parser = new xml2js.Parser({explicitArray : false, mergeAttrs : true});
-    let feed;
-    parser.parseString(response,  function (err, result) {
+    let feed: any;
+    parser.parseString(response, function(err: any, result: any) {
       if (err) {
         console.warn(err);
       }
