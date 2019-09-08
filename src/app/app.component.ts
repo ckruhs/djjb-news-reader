@@ -7,6 +7,7 @@ import { FeedEntry } from './api/feed-entry';
 import { environment } from '../environments/environment';
 
 @Component({
+  // tslint:disable-next-line: component-selector
   selector: 'ck-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css',
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   title: string;
   feeds: Array<FeedEntry> = [];
 
-  constructor (
+  constructor(
     private feedService: FeedService,
     private elementRef: ElementRef
   ) {}
