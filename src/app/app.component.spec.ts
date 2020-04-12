@@ -5,7 +5,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
 import { ThumbnailPipe } from './pipes/thumbnail.pipe';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatToolbarModule, MatExpansionModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeedService } from './services/feed.service';
 

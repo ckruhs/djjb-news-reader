@@ -8,7 +8,8 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule, MatExpansionModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 import { FeedService } from './services/feed.service';
 import { SpinnerComponent } from './spinner/spinner.component';
