@@ -1,24 +1,30 @@
-<mat-toolbar color="primary">
-  <span>{{title}}</span>
-  <span class="fill-remaining-space"></span>
-  <span><i style="cursor:pointer" class="material-icons" (click)="refreshFeed()">refresh</i></span>
+<mat-toolbar color="primary" style="margin-top: 13px; padding: 5px 10px; min-height: 48px; ">
+  <a href="https://www.djjb.de" target="blank">
+    <img src="https://www.djjb.de/images/logo.png" style="padding-top: 0px; width: 345px;"/>
+  </a>
 </mat-toolbar>
+  <mat-tab-group>
+    <mat-tab label="Aktuelles" >
+      <ck-spinner *ngIf="!feeds.length" ></ck-spinner>
 
-<ck-spinner *ngIf="!feeds.length"></ck-spinner>
-
-<mat-accordion>
-
-  <mat-expansion-panel *ngFor="let feed of feeds">
-    <mat-expansion-panel-header>
-      <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
-    </mat-expansion-panel-header>
-    <img (click)="openLinkInBrowser(feed)" width="100%" src="{{feed | thumbnail}}" alt="..."><br>
-    {{feed.description | slice:0:1000}}...
-    
-    <mat-action-row>
-        <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
-    </mat-action-row>
-    
-  </mat-expansion-panel>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let feed of feeds">
+          <mat-expansion-panel-header>
+            <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
+          </mat-expansion-panel-header>
+          <img (click)="openLinkInBrowser(feed)" width="100%" src="{{feed | thumbnail}}" alt="..."><br>
+          {{feed.description | slice:0:1000}}...
+          
+          <mat-action-row>
+              <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
+          </mat-action-row>
+          
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-tab>
   
-</mat-accordion>
+    <mat-tab label="Lehrgänge">
+      <div #lghost></div>
+    </mat-tab>
+ 
+</mat-tab-group>
