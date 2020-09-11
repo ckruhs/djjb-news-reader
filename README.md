@@ -5,7 +5,7 @@
 
 # DJJB News Reader
 
-This is a Progressive Web App to display the [News Feed](https://www.DJJB.de/index.rss) of the German Jiu Jitsu Federation / [Deutscher Jiu Jitsu Bund](https://www.DJJB.de) (DJJB) on mobile devices.
+This is a Progressive Web App to display the [News Feed](https://www.DJJB.de/index.rss) of the German Jiu Jitsu Federation / [Deutscher Jiu Jitsu Bund](https://www.DJJB.de) (DJJB) on mobile devices. In addition, the course plan can be viewed and online registrations can be made.
 
 Watch the App live on your mobile device here: https://www.DJJB.de/news-reader
 
