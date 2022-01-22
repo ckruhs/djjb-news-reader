@@ -45,7 +45,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.elementRef.nativeElement.appendChild(lgscript);
 
       let lglist = document.createElement('x-lehrgangsanmeldung');
-      lglist.style.cssText='font-size: .8em; overflow-y: auto;'
+      lglist.style.cssText='font-size: .8em;'
       this.lghost.nativeElement.appendChild(lglist)
   }
 
