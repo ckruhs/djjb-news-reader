@@ -3,7 +3,7 @@
   "short_name": "DJJB",
   "description": "Aktuelle News Meldungen vom Deutschen Jiu Jitsu Bund",
   "lang": "de-DE",
-  "theme_color": "#3f51b5",
+  "theme_color": "#fff",
   "background_color": "#fff",
   "display": "standalone",
   "scope": ".",
