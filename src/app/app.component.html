@@ -5,7 +5,7 @@
     </a>
   </mat-toolbar>
  
-    <mat-tab-group class="app-body">
+    <mat-tab-group class="app-body" [mat-stretch-tabs]="false" mat-align-tabs="start">
       <mat-tab label="Aktuelles" >
         <ck-spinner *ngIf="!feeds.length" ></ck-spinner>
 

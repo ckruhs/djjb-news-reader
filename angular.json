@@ -29,7 +29,10 @@
               "src/styles.css",
               "src/theme.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "xml2js"
+            ]
           },
           "configurations": {
             "production": {
@@ -67,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "djjb-news-reader:build"
+            "buildTarget": "djjb-news-reader:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "djjb-news-reader:build:production"
+              "buildTarget": "djjb-news-reader:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "djjb-news-reader:build"
+            "buildTarget": "djjb-news-reader:build"
           }
         },
         "test": {
@@ -127,6 +130,9 @@
           }
         }
       }
-    }},
-  "defaultProject": "djjb-news-reader"
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
 }
