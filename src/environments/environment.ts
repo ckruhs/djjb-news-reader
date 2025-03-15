@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  feedLocation: './assets/sample.rss'
+  feedLocation: '/assets/sample.rss'  // Updated to use absolute path
 };
 
 /*
