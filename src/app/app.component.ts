@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
 
-import { delay } from 'rxjs/internal/operators';
+import { delay } from 'rxjs/operators';
 
 import { FeedService } from './services/feed.service';
 import { FeedEntry } from './api/feed-entry';
@@ -34,35 +34,53 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-      const addtohomescript = document.createElement('script');
-      addtohomescript.type = 'text/javascript';
-      addtohomescript.innerHTML = 'addToHomescreen();';
-      this.elementRef.nativeElement.appendChild(addtohomescript);
+    try {
+      this.loadAddToHomeScreen();
+      this.loadLehrgangsanmeldung();
+    } catch (error) {
+      console.error('Error loading scripts:', error);
+    }
+  }
 
-      const lgscript = document.createElement('script');
-      lgscript.type = 'module';
-      lgscript.src = 'https://djjb.foehst.net/lehrgangsanmeldung.js';
-      this.elementRef.nativeElement.appendChild(lgscript);
+  private loadAddToHomeScreen() {
+    const script = this.renderer.createElement('script');
+    script.type = 'text/javascript';
+    script.text = 'if (window.addToHomescreen) { addToHomescreen(); }';
+    this.renderer.appendChild(this.elementRef.nativeElement, script);
+  }
 
-      let lglist = document.createElement('x-lehrgangsanmeldung');
-      lglist.style.cssText='font-size: .8em;'
-      this.lghost.nativeElement.appendChild(lglist)
+  private loadLehrgangsanmeldung() {
+    if (this.lghost) {
+      const script = this.renderer.createElement('script');
+      script.type = 'module';
+      script.src = 'https://djjb.foehst.net/lehrgangsanmeldung.js';
+      script.onload = () => {
+        const lglist = this.renderer.createElement('x-lehrgangsanmeldung');
+        this.renderer.setStyle(lglist, 'font-size', '.8em');
+        this.renderer.appendChild(this.lghost.nativeElement, lglist);
+      };
+      this.renderer.appendChild(this.elementRef.nativeElement, script);
+    }
   }
 
   refreshFeed() {
-    this.feeds.length = 0;
-
-    this.feedService.getFeedContent(this.feedLocation).pipe(delay(500))
-        .subscribe(
-            feed => {
-              // console.log('feed: ' , feed);
-              this.title = feed.rss.channel.description;
-              this.feeds = feed.rss.channel.item;
-            } ,
-            error => console.log(error));
+    this.feeds = [];
+    this.feedService.getFeedContent(this.feedLocation)
+      .pipe(delay(500))
+      .subscribe({
+        next: (feed: any) => {
+          if (feed?.rss?.channel) {
+            this.title = feed.rss.channel.description;
+            this.feeds = feed.rss.channel.item;
+          }
+        },
+        error: (error) => {
+          console.error('Error loading feed:', error);
+        }
+      });
   }
 
-  openLinkInBrowser(feed: { link: string; }) {
-    window.open(feed.link);
+  openLinkInBrowser(feed: any) {
+    window.open(feed.link, '_blank');
   }
 }
