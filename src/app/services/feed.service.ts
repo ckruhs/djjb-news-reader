@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, from } from 'rxjs';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import * as xml2js from 'xml2js';
 import { Feed } from '../api/feed';
 
@@ -13,7 +13,7 @@ export class FeedService {
 
   getFeedContent(url: string): Observable<Feed> {
     return this.http.get(url, { responseType: 'text' }).pipe(
-      map(this.extractFeeds),
+      switchMap(response => from(this.extractFeeds(response))),
       catchError(error => {
         console.error('Error fetching feed:', error);
         return throwError(() => error);
@@ -21,25 +21,62 @@ export class FeedService {
     );
   }
 
-  private extractFeeds(response: any): Feed {
-    const parser = new xml2js.Parser({ 
-      explicitArray: false, 
-      mergeAttrs: true 
-    });
+  private extractFeeds(response: string): Promise<Feed> {
+    // Remove any BOM and whitespace
+    const sanitizedXml = response.trim().replace(/^\uFEFF/, '');
     
-    let feed: Feed;
-    parser.parseString(response, (err: any, result: any) => {
-      if (err) {
-        console.error('XML parsing error:', err);
-        throw err;
-      }
-      feed = result;
-    });
-    
-    if (!feed) {
-      throw new Error('Failed to parse feed content');
+    // Ensure XML starts with <?xml
+    if (!sanitizedXml.startsWith('<?xml')) {
+      return Promise.reject(new Error('Invalid XML: Missing XML declaration'));
     }
+
+    const parser = new xml2js.Parser({ 
+      trim: true,
+      normalize: true,
+      explicitArray: false,
+      mergeAttrs: true,
+      attrNameProcessors: [(name: string) => {
+        // Convert attribute names with : to valid object properties
+        return name.replace(':', '_');
+      }],
+      // Process the date strings into Date objects
+      valueProcessors: [(value: string, name: string) => {
+        if (name === 'pubDate' || name === 'lastBuildDate') {
+          return new Date(value);
+        }
+        return value;
+      }]
+    });
     
-    return feed;
+    return new Promise((resolve, reject) => {
+      parser.parseString(sanitizedXml, (err: any, result: any) => {
+        if (err) {
+          console.error('XML parsing error:', err);
+          reject(err);
+        } else {
+          // Ensure item is always an array
+          if (result?.rss?.channel?.item && !Array.isArray(result.rss.channel.item)) {
+            result.rss.channel.item = [result.rss.channel.item];
+          }
+          
+          // Process all pubDate strings in items
+          if (Array.isArray(result?.rss?.channel?.item)) {
+            result.rss.channel.item = result.rss.channel.item.map((item: any) => {
+              // Move content_encoded back to content:encoded if needed
+              if (item.content_encoded !== undefined) {
+                item['content:encoded'] = item.content_encoded;
+                delete item.content_encoded;
+              }
+              return {
+                ...item,
+                pubDate: item.pubDate ? new Date(item.pubDate) : undefined
+              };
+            });
+          }
+          
+          resolve(result as Feed);
+        }
+      });
+    });
   }
 }
