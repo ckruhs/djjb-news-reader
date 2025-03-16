@@ -6,4 +6,5 @@ export interface FeedEntry {
   category: string;
   description: string;
   content: string;
+  'content:encoded': string;
 }
