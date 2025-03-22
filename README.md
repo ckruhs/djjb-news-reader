@@ -58,6 +58,14 @@ ng serve
 
 Navigate to [http://localhost:4200/](http://localhost:4200/). The app will automatically reload if you change any of the source files.
 
+### Development vs Production Builds
+The production build (`ng build --configuration=production`) applies performance optimizations that may result in differences compared to the development build:
+
+- **Google Fonts Handling**: In development, fonts are loaded using external link tags. In production, the Angular build process inlines these fonts as CSS `@font-face` declarations directly in the HTML file. This is intentional and improves performance by reducing render-blocking resources.
+- Other optimizations include minification, tree-shaking, and ahead-of-time (AOT) compilation.
+
+These differences are expected and beneficial for production performance.
+
 ## Acknowledgments
 The [BeCompany news reader tutorial](https://github.com/becompany/angular2-rss-reader-tutorial) was a good starting point for the project and some code parts were taken over.
 
