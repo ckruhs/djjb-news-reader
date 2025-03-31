@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ThumbnailPipe } from './pipes/thumbnail.pipe';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -50,22 +50,19 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        BrowserModule,
-        HttpClientModule,
-        MatToolbarModule,
-        MatExpansionModule,
-        MatTabsModule,
-        BrowserAnimationsModule
-      ],
-      declarations: [
+    declarations: [
         AppComponent,
         SpinnerComponent,
         ThumbnailPipe
-      ],
-      providers: [FeedService]
-    }).compileComponents();
+    ],
+    imports: [RouterTestingModule,
+        BrowserModule,
+        MatToolbarModule,
+        MatExpansionModule,
+        MatTabsModule,
+        BrowserAnimationsModule],
+    providers: [FeedService, provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
 
     feedService = TestBed.inject(FeedService);
     feedServiceSpy = spyOn(feedService, 'getFeedContent').and.returnValue(of(mockFeed));
