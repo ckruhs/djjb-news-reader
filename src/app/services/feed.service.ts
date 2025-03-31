@@ -1,24 +1,84 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, from } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { Observable, throwError, from, BehaviorSubject } from 'rxjs';
+import { map, catchError, switchMap, tap } from 'rxjs/operators';
 import * as xml2js from 'xml2js';
 import { Feed } from '../api/feed';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeedService {
+  private lastFeedEntries = new Map<string, Set<string>>();
+  private newEntriesSubject = new BehaviorSubject<{url: string, guid: string, title: string}[]>([]);
+  
   constructor(private http: HttpClient) { }
-
+  
+  // Observable that emits when new entries are found
+  public newEntries$ = this.newEntriesSubject.asObservable();
+  
   getFeedContent(url: string): Observable<Feed> {
     return this.http.get(url, { responseType: 'text' }).pipe(
       switchMap(response => from(this.extractFeeds(response))),
+      tap(feed => this.checkForNewEntries(url, feed)),
       catchError(error => {
         console.error('Error fetching feed:', error);
         return throwError(() => error);
       })
     );
+  }
+  
+  // Start checking for new entries at regular intervals
+  startFeedMonitoring(urls: string[]): void {
+    urls.forEach(url => {
+      // Initial load to set up the reference entries
+      this.getFeedContent(url).subscribe();
+      
+      // Set up interval checking for new entries
+      setInterval(() => {
+        this.checkForUpdates(url);
+      }, environment.checkInterval);
+    });
+  }
+  
+  // Check a specific feed URL for updates
+  checkForUpdates(url: string): void {
+    this.getFeedContent(url).subscribe();
+  }
+  
+  // Check if there are new entries compared to last fetch
+  private checkForNewEntries(url: string, feed: Feed): void {
+    if (!feed?.rss?.channel?.item || !Array.isArray(feed.rss.channel.item)) {
+      return;
+    }
+    
+    const currentEntryGuids = new Set<string>();
+    const newEntries: {url: string, guid: string, title: string}[] = [];
+    
+    feed.rss.channel.item.forEach(item => {
+      const guid = item.guid || item.link || item.title;
+      if (!guid) return;
+      
+      currentEntryGuids.add(guid);
+      
+      // If we've seen this feed before and this is a new entry
+      if (this.lastFeedEntries.has(url) && !this.lastFeedEntries.get(url)?.has(guid)) {
+        newEntries.push({
+          url,
+          guid,
+          title: item.title || 'New entry'
+        });
+      }
+    });
+    
+    // Store current entries for future comparison
+    this.lastFeedEntries.set(url, currentEntryGuids);
+    
+    // Emit any new entries found
+    if (newEntries.length > 0) {
+      this.newEntriesSubject.next(newEntries);
+    }
   }
 
   private extractFeeds(response: string): Promise<Feed> {

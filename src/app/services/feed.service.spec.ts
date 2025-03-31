@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { FeedService } from './feed.service';
 import { Feed } from '../api/feed';
 import { firstValueFrom } from 'rxjs';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('FeedService', () => {
   let service: FeedService;
@@ -37,9 +38,9 @@ describe('FeedService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [FeedService]
-    });
+    imports: [],
+    providers: [FeedService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
 
     service = TestBed.inject(FeedService);
     httpMock = TestBed.inject(HttpTestingController);
