@@ -1,10 +1,10 @@
-import { Component, OnInit, AfterViewInit, ElementRef, ViewEncapsulation, Renderer2, ViewChild } from '@angular/core';
-
+import { Component, OnInit, AfterViewInit, ElementRef, ViewEncapsulation, Renderer2, ViewChild, OnDestroy } from '@angular/core';
 import { delay } from 'rxjs/operators';
-
 import { FeedService } from './services/feed.service';
+import { NotificationService } from './services/notification.service';
 import { FeedEntry } from './api/feed-entry';
 import { environment } from '../environments/environment';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -14,23 +14,53 @@ import { environment } from '../environments/environment';
               '../assets/addtohomescreen.css'],
   encapsulation: ViewEncapsulation.None
 })
-
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   feedLocation = environment.feedLocation + '?v=' + Math.random();  // prevent browser caching
-
   title: string;
   feeds: Array<FeedEntry> = [];
+  private newEntriesSubscription: Subscription;
   
   @ViewChild('lghost') lghost: ElementRef;
-
   constructor(
     private feedService: FeedService,
+    private notificationService: NotificationService,
     private elementRef: ElementRef,
     private renderer: Renderer2
   ) {}
 
   ngOnInit() {
     this.refreshFeed();
+    
+    // Start monitoring for new feed entries
+    this.feedService.startFeedMonitoring([this.feedLocation]);
+    
+    // Subscribe to new entries and show notifications for them
+    this.newEntriesSubscription = this.feedService.newEntries$.subscribe(entries => {
+      if (entries && entries.length > 0) {
+        // Show notification for each new entry
+        entries.forEach(entry => {
+          this.notificationService.showNewFeedEntryNotification(
+            'DJJB News', // Feed title
+            entry.title,
+            entry.url
+          );
+        });
+      }
+    });
+    
+    // Handle notification clicks
+    this.notificationService.getNotificationClicks().subscribe(event => {
+      if (event.notification.data && event.notification.data.url) {
+        window.open(event.notification.data.url, '_blank');
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription to prevent memory leaks
+    if (this.newEntriesSubscription) {
+      this.newEntriesSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {

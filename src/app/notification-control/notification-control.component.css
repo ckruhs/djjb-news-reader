@@ -1,0 +1,9 @@
+.unsupported-message {
+  color: #777;
+  font-size: 0.8em;
+  margin-top: 8px;
+}
+
+button {
+  margin: 10px 0;
+}

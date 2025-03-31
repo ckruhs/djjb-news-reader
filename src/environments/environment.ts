@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  feedLocation: '/assets/sample.rss'  // Updated to use absolute path
+  feedLocation: '/assets/sample.rss',  // Updated to use absolute path
+  apiUrl: 'http://localhost:3000/api', // Backend API for push notifications
+  checkInterval: 900000 // Check for new feeds every 15 minutes (in milliseconds)
 };
 
 /*

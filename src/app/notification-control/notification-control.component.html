@@ -1,0 +1,10 @@
+<button mat-raised-button 
+       [color]="isSubscribed ? 'accent' : 'primary'"
+       (click)="toggleNotifications()"
+       [disabled]="!isPushSupported || loading">
+  <mat-icon>{{ isSubscribed ? 'notifications_active' : 'notifications' }}</mat-icon>
+  {{ buttonText }}
+</button>
+<div *ngIf="!isPushSupported" class="unsupported-message">
+  Push notifications are not supported in this browser
+</div>
