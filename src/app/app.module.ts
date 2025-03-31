@@ -3,6 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideMessaging, getMessaging } from '@angular/fire/messaging';
 import { environment } from '../environments/environment';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -18,21 +20,29 @@ import { ThumbnailPipe } from './pipes/thumbnail.pipe';
 import { FeedService } from './services/feed.service';
 import { NotificationControlComponent } from './notification-control/notification-control.component';
 
-@NgModule({ declarations: [
-        AppComponent,
-        SpinnerComponent,
-        ThumbnailPipe,
-        NotificationControlComponent
-    ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatTabsModule,
-        MatExpansionModule,
-        MatButtonModule,
-        MatIconModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production
-        })], providers: [FeedService, provideHttpClient(withInterceptorsFromDi())] })
+@NgModule({
+  declarations: [
+    AppComponent,
+    SpinnerComponent,
+    ThumbnailPipe,
+    NotificationControlComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatTabsModule,
+    MatExpansionModule,
+    MatButtonModule,
+    MatIconModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    }),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideMessaging(() => getMessaging()),
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
 export class AppModule { }

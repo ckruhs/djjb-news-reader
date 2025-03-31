@@ -7,12 +7,13 @@ import { environment } from '../environments/environment';
 import { Subscription } from 'rxjs';
 
 @Component({
-  // tslint:disable-next-line: component-selector
-  selector: 'ck-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css',
-              '../assets/addtohomescreen.css'],
-  encapsulation: ViewEncapsulation.None
+    // tslint:disable-next-line: component-selector
+    selector: 'ck-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css',
+        '../assets/addtohomescreen.css'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
   feedLocation = environment.feedLocation + '?v=' + Math.random();  // prevent browser caching

@@ -4,9 +4,10 @@ import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-notification-control',
-  templateUrl: './notification-control.component.html',
-  styleUrls: ['./notification-control.component.css']
+    selector: 'app-notification-control',
+    templateUrl: './notification-control.component.html',
+    styleUrls: ['./notification-control.component.css'],
+    standalone: false
 })
 export class NotificationControlComponent implements OnInit, OnDestroy {
   isSubscribed = false;
