@@ -13,7 +13,7 @@ export class NotificationService {
   readonly VAPID_PUBLIC_KEY = 'BJ5IxJBWdeqFDJTvrZ4wNRu7UY2XigDXjgiUBYEYVXDudxhEs0ReOJRBcBHsPYgZ5dyV8VjyqzbQKS8V7bUAglk';
   
   // API endpoint for registering push subscriptions (would need to be implemented on your backend)
-  private pushSubscriptionEndpoint = environment.apiUrl ? `${environment.apiUrl}/push-subscription` : '';
+  private pushSubscriptionEndpoint = environment.apiUrl ? `${environment.apiUrl}/push-subscription` : null;
   
   constructor(
     private swPush: SwPush,

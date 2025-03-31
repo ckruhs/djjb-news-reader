@@ -1,5 +1,8 @@
 export const environment = {
   production: true,
+  feedLocation: 'https://example.com/feed',
+  checkInterval: 60000,
+  apiUrl: 'https://api.example.com',
   firebase: {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_AUTH_DOMAIN",
