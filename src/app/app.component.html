@@ -4,45 +4,56 @@
       <img src="https://www.djjb.de/images/logo.png" style="padding-top: 9px; width: 345px;"/>
     </a>
     <span class="toolbar-spacer"></span>
-    <div *ngIf="isOffline" class="offline-indicator">
-      OFFLINE
-    </div>
+    @if (isOffline) {
+      <div class="offline-indicator">
+        OFFLINE
+      </div>
+    }
   </mat-toolbar>
- 
+
   <mat-tab-group class="app-body" [mat-stretch-tabs]="false" mat-align-tabs="start">
     <mat-tab label="Aktuelles">
       <div class="content-container">
         <!-- Loading indicator -->
-        <ck-spinner *ngIf="isLoading"></ck-spinner>
-        
+        @if (isLoading) {
+          <ck-spinner></ck-spinner>
+        }
+
         <!-- Error message -->
-        <div *ngIf="error" class="error-message">
-          <p>{{error}}</p>
-          <button mat-button (click)="refreshFeed()">Try Again</button>
-        </div>
+        @if (error) {
+          <div class="error-message">
+            <p>{{error}}</p>
+            <button mat-button (click)="refreshFeed()">Try Again</button>
+          </div>
+        }
 
         <!-- Offline indicator -->
-        <div *ngIf="isOffline && feeds.length > 0" class="offline-banner">
-          You're viewing cached content from {{getLastUpdateTime() | date:'medium'}}
-        </div>
-        
+        @if (isOffline && feeds.length > 0) {
+          <div class="offline-banner">
+            You're viewing cached content from {{getLastUpdateTime() | date:'medium'}}
+          </div>
+        }
+
         <!-- Feed content -->
-        <mat-accordion *ngIf="feeds.length > 0">
-          <mat-expansion-panel *ngFor="let feed of feeds">
-            <mat-expansion-panel-header>
-              <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
-            </mat-expansion-panel-header>
-            <img (click)="openLinkInBrowser(feed)" width="100%" src="{{feed | thumbnail}}" alt="..."><br>
-            {{feed.description | slice:0:1000}}...
-            
-            <mat-action-row>
-                <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
-            </mat-action-row>
-          </mat-expansion-panel>
-        </mat-accordion>
+        @if (feeds.length > 0) {
+          <mat-accordion>
+            @for (feed of feeds; track feed) {
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
+                </mat-expansion-panel-header>
+                <img (click)="openLinkInBrowser(feed)" width="100%" src="{{feed | thumbnail}}" alt="..."><br>
+                {{feed.description | slice:0:1000}}...
+                <mat-action-row>
+                  <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
+                </mat-action-row>
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        }
       </div>
     </mat-tab>
-    
+
     <mat-tab label="Lehrgänge">
       <div #lghost></div>
     </mat-tab>
@@ -56,11 +67,13 @@
         <button mat-button color="warn" (click)="clearLogs()">Clear Logs</button>
       </div>
       <div class="debug-logs">
-        <div *ngFor="let log of debugLogs" [class]="'log-entry ' + log.level">
-          <span class="log-time">{{ formatLogTime(log.timestamp) }}</span>
-          <span class="log-level">{{ log.level }}</span>
-          <span class="log-message">{{ log.message }}</span>
-        </div>
+        @for (log of debugLogs; track log) {
+          <div [class]="'log-entry ' + log.level">
+            <span class="log-time">{{ formatLogTime(log.timestamp) }}</span>
+            <span class="log-level">{{ log.level }}</span>
+            <span class="log-message">{{ log.message }}</span>
+          </div>
+        }
       </div>
     </details>
   </div>

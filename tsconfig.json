@@ -13,11 +13,6 @@
     "target": "ES2022",
     "typeRoots": [
       "node_modules/@types"
-    ],
-    "lib": [
-      "ES2022",
-      "dom",
-      "dom.iterable"
     ]
   },
   "angularCompilerOptions": {

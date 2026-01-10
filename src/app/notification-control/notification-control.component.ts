@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -12,10 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./notification-control.component.css'],
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule
-  ]
+]
 })
 export class NotificationControlComponent implements OnInit, OnDestroy {
   isSubscribed = false;
