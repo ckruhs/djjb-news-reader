@@ -3,13 +3,31 @@
     <a href="https://www.djjb.de" target="blank">
       <img src="https://www.djjb.de/images/logo.png" style="padding-top: 9px; width: 345px;"/>
     </a>
+    <span class="toolbar-spacer"></span>
+    <div *ngIf="isOffline" class="offline-indicator">
+      OFFLINE
+    </div>
   </mat-toolbar>
  
-    <mat-tab-group class="app-body" [mat-stretch-tabs]="false" mat-align-tabs="start">
-      <mat-tab label="Aktuelles" >
-        <ck-spinner *ngIf="!feeds.length" ></ck-spinner>
+  <mat-tab-group class="app-body" [mat-stretch-tabs]="false" mat-align-tabs="start">
+    <mat-tab label="Aktuelles">
+      <div class="content-container">
+        <!-- Loading indicator -->
+        <ck-spinner *ngIf="isLoading"></ck-spinner>
+        
+        <!-- Error message -->
+        <div *ngIf="error" class="error-message">
+          <p>{{error}}</p>
+          <button mat-button (click)="refreshFeed()">Try Again</button>
+        </div>
 
-        <mat-accordion>
+        <!-- Offline indicator -->
+        <div *ngIf="isOffline && feeds.length > 0" class="offline-banner">
+          You're viewing cached content from {{getLastUpdateTime() | date:'medium'}}
+        </div>
+        
+        <!-- Feed content -->
+        <mat-accordion *ngIf="feeds.length > 0">
           <mat-expansion-panel *ngFor="let feed of feeds">
             <mat-expansion-panel-header>
               <span style="font-size: smaller"> {{feed.title | slice:0:85}}</span>
@@ -20,15 +38,30 @@
             <mat-action-row>
                 <span style="cursor: pointer" (click)="openLinkInBrowser(feed)">Vollständigen Artikel lesen...</span>
             </mat-action-row>
-            
           </mat-expansion-panel>
         </mat-accordion>
-      </mat-tab>
+      </div>
+    </mat-tab>
     
-      <mat-tab label="Lehrgänge">
-        <div #lghost></div>
-      </mat-tab>
-
+    <mat-tab label="Lehrgänge">
+      <div #lghost></div>
+    </mat-tab>
   </mat-tab-group>
 
+  <!-- Debug panel -->
+  <div class="debug-panel mat-elevation-z1">
+    <details>
+      <summary><b>Debug Info</b> (click to expand)</summary>
+      <div class="debug-actions">
+        <button mat-button color="warn" (click)="clearLogs()">Clear Logs</button>
+      </div>
+      <div class="debug-logs">
+        <div *ngFor="let log of debugLogs" [class]="'log-entry ' + log.level">
+          <span class="log-time">{{ formatLogTime(log.timestamp) }}</span>
+          <span class="log-level">{{ log.level }}</span>
+          <span class="log-message">{{ log.message }}</span>
+        </div>
+      </div>
+    </details>
+  </div>
 </div>

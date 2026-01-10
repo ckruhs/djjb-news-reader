@@ -4,8 +4,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Extracts the thumbnail from content:encoded node or direct HTML content
  */
 @Pipe({
-    name: 'thumbnail',
-    standalone: false
+  name: 'thumbnail',
+  standalone: true
 })
 export class ThumbnailPipe implements PipeTransform {
 

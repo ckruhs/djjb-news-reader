@@ -5,6 +5,7 @@
     {
       "name": "app",
       "installMode": "prefetch",
+      "updateMode": "prefetch",
       "resources": {
         "files": [
           "./favicon.ico",
@@ -12,9 +13,13 @@
           "./manifest.webmanifest",
           "./*.css",
           "./*.js"
+        ],
+        "urls": [
+          "https://www.djjb.de/images/logo.png"
         ]
       }
-    }, {
+    },
+    {
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",
@@ -26,5 +31,13 @@
         ]
       }
     }
-  ]
+  ],
+  "navigationUrls": [
+    "/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**",
+    "!/**/*.rss"
+  ],
+  "navigationRequestStrategy": "freshness"
 }

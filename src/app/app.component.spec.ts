@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { ThumbnailPipe } from './pipes/thumbnail.pipe';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -12,12 +11,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FeedService } from './services/feed.service';
 import { of, throwError } from 'rxjs';
 import { Feed } from './api/feed';
+import { AppComponent } from './app.component';
+import { SwPush } from '@angular/service-worker';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NotificationService } from './services/notification.service';
+
+// Mock SwPush dependency with proper observable implementation
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let feedService: FeedService;
   let feedServiceSpy: jasmine.Spy;
+  let notificationService: jasmine.SpyObj<NotificationService>;
 
   const mockFeed: Feed = {
     rss: {
@@ -49,23 +55,46 @@ describe('AppComponent', () => {
   };
 
   beforeEach(async () => {
+    // Create a mock for NotificationService
+    notificationService = jasmine.createSpyObj('NotificationService', [
+      'showNewFeedEntryNotification', 
+      'getNotificationClicks'
+    ]);
+    notificationService.getNotificationClicks.and.returnValue(of({ notification: { data: { url: 'https://test.com' } } }));
+
     await TestBed.configureTestingModule({
-    declarations: [
-        AppComponent,
-        SpinnerComponent,
+      declarations: [],
+      imports: [
+        RouterTestingModule, 
+        BrowserModule, 
+        MatToolbarModule, 
+        MatExpansionModule, 
+        MatTabsModule, 
+        BrowserAnimationsModule, 
+        AppComponent, 
+        SpinnerComponent, 
         ThumbnailPipe
-    ],
-    imports: [RouterTestingModule,
-        BrowserModule,
-        MatToolbarModule,
-        MatExpansionModule,
-        MatTabsModule,
-        BrowserAnimationsModule],
-    providers: [FeedService, provideHttpClient(withInterceptorsFromDi())]
-}).compileComponents();
+      ],
+      providers: [
+        { provide: FeedService, useClass: MockFeedService },
+        { provide: NotificationService, useValue: notificationService },
+        provideHttpClient(withInterceptorsFromDi()),
+        { 
+          provide: SwPush, 
+          useValue: {
+            messages: of({ message: 'Test push message' }),
+            subscription: jasmine.createSpy('subscription'),
+            requestSubscription: jasmine.createSpy('requestSubscription')
+          } 
+        }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] // Add this to handle unknown elements
+    }).compileComponents();
 
     feedService = TestBed.inject(FeedService);
     feedServiceSpy = spyOn(feedService, 'getFeedContent').and.returnValue(of(mockFeed));
+    // Don't forget to mock other needed methods
+    spyOn(feedService, 'startFeedMonitoring').and.stub();
   });
 
   beforeEach(() => {
@@ -130,3 +159,16 @@ describe('AppComponent', () => {
     expect(windowSpy).toHaveBeenCalledWith(mockFeedItem.link, '_blank');
   });
 });
+
+// Create a mock FeedService to avoid issues with the real one
+class MockFeedService {
+  newEntries$ = of([]); // Mock the Observable property
+
+  getFeedContent() {
+    return of({});
+  }
+
+  startFeedMonitoring() {
+    // Do nothing
+  }
+}

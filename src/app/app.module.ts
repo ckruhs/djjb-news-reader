@@ -21,12 +21,8 @@ import { FeedService } from './services/feed.service';
 import { NotificationControlComponent } from './notification-control/notification-control.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SpinnerComponent,
-    ThumbnailPipe,
-    NotificationControlComponent
-  ],
+  declarations: [],
+  bootstrap: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -36,13 +32,22 @@ import { NotificationControlComponent } from './notification-control/notificatio
     MatExpansionModule,
     MatButtonModule,
     MatIconModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production
+    ServiceWorkerModule.register('./ngsw-worker.js', {
+      enabled: environment.production,
+      // Set to true to support deployments to subfolders
+      registrationStrategy: 'registerWithDelay:1000'
     }),
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideMessaging(() => getMessaging()),
+    // Import standalone components here
+    AppComponent,
+    SpinnerComponent,
+    ThumbnailPipe,
+    NotificationControlComponent
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    FeedService,
+    provideHttpClient(withInterceptorsFromDi()),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideMessaging(() => getMessaging())
+  ]
 })
 export class AppModule { }

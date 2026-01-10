@@ -15,7 +15,7 @@ interface OfflineQueue {
 export class OfflineStorageService {
   private dbPromise: Promise<IDBPDatabase>;
   private readonly DB_NAME = 'djjb-news-reader-db';
-  private readonly DB_VERSION = 1;
+  private readonly DB_VERSION = 2; // Increased version to trigger database upgrade
   private readonly FEEDS_STORE = 'feeds';
   private readonly FEED_ENTRIES_STORE = 'feedEntries';
   private readonly QUEUE_STORE = 'offlineQueue';
@@ -26,21 +26,31 @@ export class OfflineStorageService {
 
   private async initDatabase(): Promise<void> {
     this.dbPromise = openDB(this.DB_NAME, this.DB_VERSION, {
-      upgrade(db) {
-        // Create stores
-        if (!db.objectStoreNames.contains('feeds')) {
-          db.createObjectStore('feeds', { keyPath: 'url' });
+      upgrade(db, oldVersion, newVersion, transaction) {
+        // Handle database version upgrades
+        if (oldVersion < 1) {
+          // Create initial stores if this is a new database
+          if (!db.objectStoreNames.contains('feeds')) {
+            db.createObjectStore('feeds', { keyPath: 'url' });
+          }
+          
+          if (!db.objectStoreNames.contains('offlineQueue')) {
+            db.createObjectStore('offlineQueue', { 
+              keyPath: 'id', 
+              autoIncrement: true 
+            });
+          }
         }
         
-        if (!db.objectStoreNames.contains('feedEntries')) {
-          db.createObjectStore('feedEntries', { keyPath: 'id' });
-        }
-        
-        if (!db.objectStoreNames.contains('offlineQueue')) {
-          db.createObjectStore('offlineQueue', { 
-            keyPath: 'id', 
-            autoIncrement: true 
-          });
+        // Version 1 to 2 upgrade: Change feedEntries keyPath from 'id' to 'guid'
+        if (oldVersion < 2) {
+          // Delete old store if it exists
+          if (db.objectStoreNames.contains('feedEntries')) {
+            db.deleteObjectStore('feedEntries');
+          }
+          
+          // Create new store with correct keyPath
+          db.createObjectStore('feedEntries', { keyPath: 'guid' });
         }
       }
     });
@@ -71,11 +81,20 @@ export class OfflineStorageService {
   async saveFeedEntries(entries: FeedEntry[]): Promise<void> {
     const db = await this.dbPromise;
     const tx = db.transaction(this.FEED_ENTRIES_STORE, 'readwrite');
+    
+    // Filter out entries without a guid, and add timestamp
+    const validEntries = entries.filter(entry => !!entry.guid).map(entry => ({
+      ...entry,
+      timestamp: Date.now()
+    }));
+    
+    if (validEntries.length === 0) {
+      console.warn('No valid entries to save to offline storage (missing guid)');
+      return;
+    }
+    
     await Promise.all([
-      ...entries.map(entry => tx.store.put({
-        ...entry,
-        timestamp: Date.now()
-      })),
+      ...validEntries.map(entry => tx.store.put(entry)),
       tx.done
     ]);
   }
