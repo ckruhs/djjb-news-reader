@@ -3,7 +3,7 @@ import { SwPush } from '@angular/service-worker';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, from, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

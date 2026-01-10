@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ElementRef, ViewEncapsulation, Renderer2, ViewChild, OnDestroy } from '@angular/core';
-import { delay } from 'rxjs/operators';
+import { delay } from 'rxjs';
 import { FeedService } from './services/feed.service';
 import { NotificationService } from './services/notification.service';
 import { FeedEntry } from './api/feed-entry';
@@ -18,7 +18,6 @@ import { CacheService } from './services/cache.service';
 import { LoggerService } from './services/logger.service';
 
 @Component({
-  // tslint:disable-next-line: component-selector
   selector: 'ck-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css',

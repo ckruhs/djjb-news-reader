@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NotificationService } from '../services/notification.service';
 import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';

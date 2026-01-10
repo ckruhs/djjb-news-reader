@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, from, BehaviorSubject, of } from 'rxjs';
-import { map, catchError, switchMap, tap, timeout } from 'rxjs/operators';
+import { map, catchError, switchMap, tap, timeout } from 'rxjs';
 import * as xml2js from 'xml2js';
 import { Feed } from '../api/feed';
 import { environment } from '../../environments/environment';
