@@ -1,7 +1,8 @@
 @use '@angular/material' as mat;
 @use '@angular/material/core/m2' as m2;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 $primary: m2.define-palette(m2.$red-palette, 800); // Using Red 800 (C62828)
 $accent: m2.define-palette(m2.$pink-palette, A200, A100, A400);
